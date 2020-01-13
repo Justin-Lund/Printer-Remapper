@@ -10,7 +10,6 @@
 #--------------------------------------#
 
 # The location for the prndrvr.vbs script, which is used to manipulate the drivers, is in a different directory depending on the OS Version
-
 $PrnDrvrPathXP = "C:\Windows\system32\prndrvr.vbs"
 $PrnDrvrPath7 = "C:\Windows\system32\Printing_Admin_Scripts\en-US\prndrvr.vbs"
 $PrnDrvrPath10 = "C:\Windows\system32\Printing_Admin_Scripts\en-US\prndrvr.vbs"
