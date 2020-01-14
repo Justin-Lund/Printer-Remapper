@@ -75,7 +75,7 @@ ForEach ($Driver in $DriverList){
 
     # For Win10 Computers
     If ($ComputerOSVersion.Version.StartsWith(10)) {
-    Invoke-Expression "cscript $PrnDrvrPath10 -d -m `"$Driver`" -v 3 -e `"Windows x64`""
+        Invoke-Expression "cscript $PrnDrvrPath10 -d -m `"$Driver`" -v 3 -e `"Windows x64`""
     }
 }
 
