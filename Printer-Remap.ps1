@@ -81,7 +81,7 @@ ForEach ($Driver in $DriverList){
 
 # Re-add Network Printers
 ForEach ($Printer in $PrinterList){
-(New-Object -ComObject WScript.Network).AddWindowsPrinterConnection("$Printer")
+    (New-Object -ComObject WScript.Network).AddWindowsPrinterConnection("$Printer")
 }
 
 # Restore Default Printer
