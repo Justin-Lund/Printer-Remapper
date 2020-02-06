@@ -1,7 +1,5 @@
 # Printer-Remapper
-Deletes network printers &amp; their corresponding printer drivers, &amp; then re-installs the printers.
-
-This script will retain the default printer as well.
+Deletes network printers &amp; their corresponding printer drivers, &amp; then re-installs the printers while retaining the default printer.
 
 &nbsp;
 
