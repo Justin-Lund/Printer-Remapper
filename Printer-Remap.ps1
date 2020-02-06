@@ -73,6 +73,7 @@ $PrinterListText = $PrinterList -Join "`n"
 Date | Out-File -Force -FilePath $Path\PrinterList.txt
 
 Add-Content -Path $Path\PrinterList.txt -Value "
+DefaultPrinter:
 $DefaultPrinter
 
 Printers:
