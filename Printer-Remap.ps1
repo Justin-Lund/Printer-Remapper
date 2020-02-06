@@ -1,5 +1,5 @@
 ######################################################### 
-#              Printer & Driver Reset Tool              # 
+#             Printer & Driver Reset Tool v2            # 
 #                Created By: Justin Lund                # 
 #             https://github.com/Justin-Lund/           # 
 ######################################################### 
@@ -18,6 +18,23 @@ $ComputerOSVersion = Get-WMIObject -Class Win32_OperatingSystem
 # Initialize Arrays
 $PrinterList = @()
 $DriverList = @()
+
+# Output path for text file
+$Path = "C:\Temp"
+
+    # Create the directory if the path does not exist
+    If(!(Test-Path $Path))
+    {
+          New-Item -ItemType Directory -Force -Path $Path | Out-Null
+
+    }
+
+# Output Display Divider
+Function Divider {
+    Write-Host ""
+    Write-Host "------------------------------------------------------" -ForegroundColor Cyan
+    Write-Host ""
+}
 
 
 #--------------------------------------#
@@ -46,43 +63,96 @@ $DriverList = ($DriverList | Select-Object -Unique)
 
 
 #--------------------------------------#
+#                Output                #
+#--------------------------------------#
+
+# Create a list of all printers separated onto new lines
+$PrinterListText = $PrinterList -Join "`n"
+
+# Save list of printers in a text file (in case of any issues)
+Date | Out-File -Force -FilePath $Path\PrinterList.txt
+
+Add-Content -Path $Path\PrinterList.txt -Value "
+$DefaultPrinter
+
+Printers:
+$PrinterListText
+"
+
+# List printers on screen
+Write-Host ""
+Write-Host "Default Printer:" -ForegroundColor Green
+Write-Host $DefaultPrinter.Name
+Write-Host ""
+Write-Host "Printers:" -ForegroundColor Green
+Write-Host $PrinterListText
+
+Divider
+
+
+#--------------------------------------#
 #              Functional              #
 #--------------------------------------#
 
 # Delete all Network Printers
+Write-Host "Deleting Network Printers" -ForegroundColor Red
+Write-Host ""
 Get-WmiObject Win32_Printer | Where {$_.Network -eq $true} | ForEach {$_.Delete()}
+
 
 # Delete all Network Printer Drivers
 ForEach ($Driver in $DriverList){
 
-    # Restart Print Spooler
-    (Get-WmiObject -Class Win32_Service -Filter "Name='Spooler'").StopService()
+    # Stop Print Spooler
+    (Get-WmiObject -Class Win32_Service -Filter "Name='Spooler'").StopService() | Out-Null
     Sleep 2
-    (Get-WmiObject -Class Win32_Service -Filter "Name='Spooler'").StartService()
+
+    # Clear Local Printer Cache
+    Remove-Item -Path "C:\Windows\System32\Spool\PRINTERS\*"
+
+    # Restart Print Spooler
+    (Get-WmiObject -Class Win32_Service -Filter "Name='Spooler'").StartService() | Out-Null
     Sleep 2
 
     # Delete Printer Drivers
 
     # For WinXP Computers
     If ($ComputerOSVersion.Version.StartsWith(5)) {
+        Write-Host "Deleting Driver: " -ForegroundColor Red -NoNewline
+        Write-Host $Driver
         Invoke-Expression "cscript $PrnDrvrPathXP -d -m `"$Driver`" -v 3 -e `"Windows NT x86`""
     }
 
     # For Win7 Computers
     If ($ComputerOSVersion.Version.StartsWith(6)) {
+        Write-Host "Deleting Driver: " -ForegroundColor Red -NoNewline
+        Write-Host $Driver
         Invoke-Expression "cscript $PrnDrvrPath7 -d -m `"$Driver`" -v 3 -e `"Windows NT x86`""
     }
 
     # For Win10 Computers
     If ($ComputerOSVersion.Version.StartsWith(10)) {
+        Write-Host "Deleting Driver: " -ForegroundColor Red -NoNewline
+        Write-Host $Driver
         Invoke-Expression "cscript $PrnDrvrPath10 -d -m `"$Driver`" -v 3 -e `"Windows x64`""
     }
 }
 
+Divider
+
 # Re-add Network Printers
 ForEach ($Printer in $PrinterList){
+    Write-Host "Readding " -ForegroundColor Green -NoNewline
+    Write-Host $Printer
     (New-Object -ComObject WScript.Network).AddWindowsPrinterConnection("$Printer")
 }
 
+Write-Host ""
+
 # Restore Default Printer
-$DefaultPrinter.SetDefaultPrinter()
+Write-Host "Restoring Default Printer" -ForegroundColor Green
+$DefaultPrinter.SetDefaultPrinter() | Out-Null
+
+Write-Host ""
+Write-Host ""
+Pause
