@@ -3,4 +3,4 @@ Deletes network printers &amp; their corresponding printer drivers, &amp; then r
 
 The list of printers is backed up to C:\Temp\PrinterList.txt for reference in case of any issues.
 
-Must be run as the local user
+Must be run as the local user.
