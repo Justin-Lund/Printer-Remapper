@@ -97,7 +97,6 @@ Divider
 
 # Delete all Network Printers
 Write-Host "Deleting Network Printers" -ForegroundColor Red
-Write-Host ""
 Get-WmiObject Win32_Printer | Where {$_.Network -eq $true} | ForEach {$_.Delete()}
 
 
@@ -119,21 +118,21 @@ ForEach ($Driver in $DriverList){
 
     # For WinXP Computers
     If ($ComputerOSVersion.Version.StartsWith(5)) {
-        Write-Host "Deleting Driver: " -ForegroundColor Red -NoNewline
+        Write-Host "`nDeleting Driver: " -ForegroundColor Red -NoNewline
         Write-Host $Driver
         Invoke-Expression "cscript $PrnDrvrPathXP -d -m `"$Driver`" -v 3 -e `"Windows NT x86`""
     }
 
     # For Win7 Computers
     If ($ComputerOSVersion.Version.StartsWith(6)) {
-        Write-Host "Deleting Driver: " -ForegroundColor Red -NoNewline
+        Write-Host "`nDeleting Driver: " -ForegroundColor Red -NoNewline
         Write-Host $Driver
         Invoke-Expression "cscript $PrnDrvrPath7 -d -m `"$Driver`" -v 3 -e `"Windows NT x86`""
     }
 
     # For Win10 Computers
     If ($ComputerOSVersion.Version.StartsWith(10)) {
-        Write-Host "Deleting Driver: " -ForegroundColor Red -NoNewline
+        Write-Host "`nDeleting Driver: " -ForegroundColor Red -NoNewline
         Write-Host $Driver
         Invoke-Expression "cscript $PrnDrvrPath10 -d -m `"$Driver`" -v 3 -e `"Windows x64`""
     }
