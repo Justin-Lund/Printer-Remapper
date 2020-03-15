@@ -68,7 +68,7 @@ $DriverList = ($DriverList | Select-Object -Unique)
 # Create a list of all printers separated onto new lines
 $PrinterListText = $PrinterList -Join "`n"
 
-# Save list of printers in a text file (in case of any issues)
+# Save list of printers in a text file (to be rferenced in case of any issues)
 Date | Out-File -Force -FilePath $Path\PrinterList.txt
 
 Add-Content -Path $Path\PrinterList.txt -Value "
