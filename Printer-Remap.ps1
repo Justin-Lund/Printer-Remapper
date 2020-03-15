@@ -26,7 +26,6 @@ $Path = "C:\Temp"
     If(!(Test-Path $Path))
     {
           New-Item -ItemType Directory -Force -Path $Path | Out-Null
-
     }
 
 # Output Display Divider
